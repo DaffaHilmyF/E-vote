@@ -1,5 +1,12 @@
-const express = require('express');
-const route = express();
+/**
+* Hello Coder,
+* The team trying to implement DRY and clean code. 
+* almost all function in this area do one job.
+* Reminder for all editors, please use the clean code principle.
+* Best Regards, Daffa Hilmy Fadhlurrohman
+**/
+
+// Load library
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs')
 
@@ -7,12 +14,13 @@ const bcrypt = require('bcryptjs')
 const db = require('../model/user.js');
 
 
+// TODO: make it more simple & what json the FE needs to return
+// IS: comparing the user password with the hased password in the database
+// FS: Validated or Not
 async function userValidatePassword(user, password, res){
 	try {
 
 		const isMatch = await bcrypt.compare(password, user.password);
-		console.log(isMatch)
-
 		switch (isMatch) {
 			case true:
 				return res.status(200).json({
@@ -26,19 +34,6 @@ async function userValidatePassword(user, password, res){
 					error: 'Password incorrect',
 				});
 		}
-
-
-
-		// bcrypt.compare(password, user.password, (isMatch) =>{
-		// 	if (isMatch) {
-		// 		return res.status(200).json({
-		// 			status: 'Success',
-		// 			data: data,
-		// 		})
-		// 	} else {
-		// 		
-		// 	}
-		// })
 	} catch (error) {
 		console.error(error)
 	}
@@ -46,7 +41,9 @@ async function userValidatePassword(user, password, res){
 }
 
 
-// TODO check kenapa kgk bisa dihandle ama case su
+// TODO: make it more simple
+// IS: Check if the given input exists in the database.
+// FS: if Exist execute userValidatePassword function
 function userAccountCheck(user, password, res){
 	try {
 		if(!user){
@@ -58,26 +55,28 @@ function userAccountCheck(user, password, res){
 		if(user){
 			userValidatePassword(user, password, res);
 		}
-		// switch (user !== null) {
-		// 	case false:
-		// 		userValidatePassword(user, password, res);
-		// 	default:
-		// 		return res.status(400).json({
-		// 			status: 'error',
-		// 			error: 'NIM is not registered or cannot be empty',
-		// 		}); 
-		// }
 	} catch (error) {
 		console.error(error)
 	}
 }
 
 
-function userCheckAndValidate(email, password, res){
+// TODO: make it more simple
+// IS: Check if the given input exists in the database.
+// FS: if Exist execute userAccountCheck function
+async function userCheckAndValidate(nim, password, res){
 	try {
-		db.findOne({email:email}).then((user)=>{
-			userAccountCheck(user, password, res);
-		})
+        const isTrue = await userInputCheck(nim, password)
+    
+        if(isTrue== true){
+            db.findOne({nim:nim}).then((user)=>{
+                userAccountCheck(user, password, res);
+            })
+        }else{
+            console.log('ini error')
+            return res.status(400).json({message: "bad request"})
+        }
+		
 	} catch (error) {
 		console.error(error);
 	}
@@ -85,9 +84,8 @@ function userCheckAndValidate(email, password, res){
 
 
 
+// TODO: define all possibility defect
 
-
-// // TODO: define all possibility defect
 // function userEmailCheck(email){
 
 // 	const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -96,28 +94,32 @@ function userCheckAndValidate(email, password, res){
 // }
 
 
-// function userNIMCheck(nim){
-	
-// 	if(nim.toString().length == 10){
-// 		return true;
-// 	}else{
-// 		return false;
-// 	}
+function userNIMCheck(nim){
+    if(nim == null){
 
-// }
+        return false;
+    }
+	if(nim.toString().length == 10){
+		return true;
+	}else{
+		return false;
+	}
+}
 
 
-// function userPasswordCheck(password){
-// 	if(password === null){
-// 		return false;
-// 	}else{
-// 		return true;
-// 	}
-// }
+function userPasswordCheck(password){
+	if(password == null){
+		return false;
+	}else{
+		return true;
+	}
+}
 
-// function userAccountCheck(){
-
-// }
+async function userInputCheck(nim, password){
+    const isNIMTrue = await userNIMCheck(nim);
+    const isPassTrue = await userPasswordCheck(password);
+    return isPassTrue === isNIMTrue
+}
 
 // async function userCreateAccount(name, email, nim, password){
 

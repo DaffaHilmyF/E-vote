@@ -13,8 +13,8 @@ const libs = require('./function.js')
 //
 route.post('/login', async (req, res) => {
 	try {
-		const {email, password} = req.body;
-		await libs.userCheckAndValidate(email, password, res);
+		const {nim, password} = req.body;
+		await libs.userCheckAndValidate(nim, password, res);
 
 	} catch (err) {
 		console.error(err)
