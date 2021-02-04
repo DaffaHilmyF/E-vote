@@ -7,9 +7,9 @@ const bcrypt = require('bcryptjs')
 const db = require('../model/user.js');
 
 
-
 route.post('/register', async(req, res)=> {
     const { name, email, nim, password} = req.body;
+	
 
     await db.findOne({email: email})
       .then((user)=>{
@@ -41,6 +41,8 @@ route.post('/register', async(req, res)=> {
 		}
     })
 })
+
+
 
 module.exports = route;
 
