@@ -1,10 +1,3 @@
-/**
-* Hello Coder,
-* The team trying to implement DRY and clean code. 
-* almost all function in this area do one job.
-* Reminder for all editors, please use the clean code principle.
-* Best Regards, Daffa Hilmy Fadhlurrohman
-**/
 
 // Load library
 const mongoose = require('mongoose');
@@ -12,6 +5,38 @@ const bcrypt = require('bcryptjs')
 
 // Load user model
 const db = require('../model/user.js');
+
+
+// check nim input is null or not
+function userNIMInputCheck(nim){
+    if(nim == null){
+
+        return false;
+    }
+    
+	if(nim.toString().length == 10){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+// check password input null or not
+function userPasswordInputCheck(password){
+	if(password == null){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+// return true or false
+async function userInputCheck(nim, password){
+    const isNIMTrue = await userNIMInputCheck(nim);
+    const isPassTrue = await userPasswordInputCheck(password);
+    return isPassTrue === isNIMTrue
+}
+
 
 
 // TODO: make it more simple & what json the FE needs to return
@@ -83,44 +108,6 @@ async function userCheckAndValidate(nim, password, res){
 }
 
 
-
-// TODO: define all possibility defect
-
-// function userEmailCheck(email){
-
-// 	const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-// 	return emailRegexp.test(email); 
-
-// }
-
-
-function userNIMInputCheck(nim){
-    if(nim == null){
-
-        return false;
-    }
-    
-	if(nim.toString().length == 10){
-		return true;
-	}else{
-		return false;
-	}
-}
-
-
-function userPasswordInputCheck(password){
-	if(password == null){
-		return false;
-	}else{
-		return true;
-	}
-}
-
-async function userInputCheck(nim, password){
-    const isNIMTrue = await userNIMInputCheck(nim);
-    const isPassTrue = await userPasswordInputCheck(password);
-    return isPassTrue === isNIMTrue
-}
 
 
 
